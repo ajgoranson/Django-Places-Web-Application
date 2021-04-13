@@ -79,6 +79,8 @@ WSGI_APPLICATION = 'wishlist.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+#Edits to database
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',

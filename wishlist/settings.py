@@ -24,7 +24,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '2b6lwsbbei^w(2v)o5*hq%aa(#$jca-0kmu0#yv+y#mghp8obx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+if os.getenv('GAE_INSTANCE'):
+
+    DEBUG = False
+else:
+    DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -87,7 +91,12 @@ DATABASES = {
 }
 
 if not os.getenv('GAE_INSTANCE'):
-    DATABASES['default']['HOST'] = '127.0.0.1'
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
+        }
+    }
 
 
 # Password validation
@@ -128,19 +137,25 @@ USE_TZ = True
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-GS_STATIC_FILE_BUCKET = 'travel-wishlist-310523.appspot.com'
+if os.getenv('GAE_INSTANCE'):
 
-STATIC_URL = f'https://storage.cloud.google.com/{GS_STATIC_FILE_BUCKET}/static/'
+    GS_STATIC_FILE_BUCKET = 'travel-wishlist-310523.appspot.com'
 
-GS_BUCKET_NAME = 'user-images-1928'
+    STATIC_URL = f'https://storage.cloud.google.com/{GS_STATIC_FILE_BUCKET}/static/'
 
-MEDIA_URL =  f'https://storage.cloud.google.com/{GS_BUCKET_NAME}/media/'
+    GS_BUCKET_NAME = 'user-images-1928'
 
-DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+    MEDIA_URL =  f'https://storage.cloud.google.com/{GS_BUCKET_NAME}/media/'
+
+    DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 
 
 
 
 
-#from google.oauth2 import service_account
-#GS_CREDENTIALS = service_account.Credentials.from_service_account_file('travel-credentials.json')
+    #from google.oauth2 import service_account
+    #GS_CREDENTIALS = service_account.Credentials.from_service_account_file('travel-credentials.json')`
+else:
+    STATIC_URL = '/static/'
+    MEDIA_URL = '/media/'
+

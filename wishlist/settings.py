@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '2b6lwsbbei^w(2v)o5*hq%aa(#$jca-0kmu0#yv+y#mghp8obx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -77,10 +77,17 @@ WSGI_APPLICATION = 'wishlist.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'places',
+        'USER': 'traveler',
+        'PASSWORD': 'chicken',
+        'HOST': '/cloudsql/travel-wishlist-310523:us-central1:wishlist-db',
+        'PORT': '5432'
     }
 }
+
+if not os.getenv('GAE_INSTANCE'):
+    DATABASES['default']['HOST'] = '127.0.0.1'
 
 
 # Password validation
@@ -119,8 +126,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
-
-MEDIA_URL = '/media/'
-
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+GS_STATIC_FILE_BUCKET = 'travel-wishlist-310523.appspot.com'
+
+STATIC_URL = f'https://storage.cloud.google.com/{GS_STATIC_FILE_BUCKET}/static/'
+
+GS_BUCKET_NAME = 'user-images-1928'
+
+MEDIA_URL =  f'https://storage.cloud.google.com/{GS_BUCKET_NAME}/media/'
+
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+
+
+
+
+
+#from google.oauth2 import service_account
+#GS_CREDENTIALS = service_account.Credentials.from_service_account_file('travel-credentials.json')

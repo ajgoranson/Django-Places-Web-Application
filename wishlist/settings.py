@@ -24,11 +24,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '2b6lwsbbei^w(2v)o5*hq%aa(#$jca-0kmu0#yv+y#mghp8obx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if os.getenv('GAE_INSTANCE'):
+#if os.getenv('GAE_INSTANCE'):
 
-    DEBUG = False
-else:
-    DEBUG = True
+ #   DEBUG = True
+#else:
+#    DEBUG = True
+
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -93,12 +95,13 @@ DATABASES = {
 }
 
 if not os.getenv('GAE_INSTANCE'):
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
-        }
-    }
+    DATABASES['default']['HOST'] = '127.0.0.1'
+    #DATABASES = {
+    #    'default': {
+    #        'ENGINE': 'django.db.backends.sqlite3',
+    #        'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
+    #    }
+    #}
 
 
 # Password validation
@@ -138,6 +141,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, 'www', 'static')
 
 if os.getenv('GAE_INSTANCE'):
 
